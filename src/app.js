@@ -18,6 +18,8 @@ app.use(express.static(publicPath));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+
+//import schemas
 const Score = mongoose.model('Score');
 const User = mongoose.model('User');
 const Comment = mongoose.model("Comment");
@@ -35,39 +37,28 @@ app.use(session({
 
 
 
-
+//create session
 app.use((req, res, next) => {
-  // now you can use {{user}} in your template!
     if(req.session.user!==undefined){
-      //console.log(req.session.user, "hihihi");
       res.locals.user = req.session.user;
       next();
     }else{
-
       next();
     }
 });
 
 
 
-function largerWPM(one, two){
-  if(one.wpm>two.wpm){
-    return one;
-  }else{
-    return two;
-  }
-}
 
 
-
-
-
+//route for homepage
 app.get('/', function(req, res) {
   Score.find({}, function(err, score, count){
+    //display highscores
     const highestScore = score.reduce(largerWPM);
     let h = [];
     h.push(highestScore);
-    console.log(h);
+    //console.log(h);
     res.render('index', {
       score:score,
       h:h,
@@ -79,9 +70,10 @@ app.get('/', function(req, res) {
 
 });
 
-
+//route for filter
 app.post('/filter', function(req, res) {
   const filter1 = req.body.username;
+  //find and render data from database
   Score.find({username: filter1}, function(err, score, count){
     res.render('index', {
       score:score,
@@ -96,8 +88,9 @@ app.post('/filter', function(req, res) {
 
 
 
-
+//post for submitting scores
 app.post('/', (req, res) => {
+  //create a new score
   new Score({
     username: req.body.username,
     time: req.body.time,
@@ -108,7 +101,7 @@ app.post('/', (req, res) => {
 
 
 });
-
+//login
 app.get('/login', function(req, res) {
   res.render("login");
 
@@ -116,9 +109,10 @@ app.get('/login', function(req, res) {
 
 
 app.post('/login', (req, res) => {
+  //store data from post
   const username = req.body.username;
   const password = req.body.password;
-
+  //log user in
   function success(newUser){
     function cb(err){
       res.locals.user = req.session.user;
@@ -126,7 +120,7 @@ app.post('/login', (req, res) => {
     }
     auth.startAuthenticatedSession(req, newUser, cb);
   }
-
+  // if error
   function error(err){
     res.render('login',{
       message:err.message,
@@ -139,15 +133,13 @@ app.post('/login', (req, res) => {
 });
 
 
-
+//render registration page
 app.get('/register', function(req, res) {
   res.render("register");
-
 });
 
 
 app.post('/register', (req, res) => {
-
   function success(newUser) {
   // start an authenticated session and redirect to another page
     function cb(err){
@@ -158,7 +150,7 @@ app.post('/register', (req, res) => {
 
 
   }
-
+  //registration error
   function error(err){
     res.render('register', {
       message:err.message
@@ -169,15 +161,19 @@ app.post('/register', (req, res) => {
 });
 
 
-
+//render test game
 app.get('/gametest', function(req, res){
   res.render("gametest");
 })
 
+
+//render scores
 app.get('/scores', function(req, res){
+  //if user session is undefined
   if(req.session.user===undefined){
     res.redirect('/');
   }else{
+    //get scores from database
     Score.find({}, function(err, score, count){
       const newscore = score.filter(score => score.username===req.session.user.username);
       console.log(newscore);
@@ -190,11 +186,13 @@ app.get('/scores', function(req, res){
   }
 })
 
-
+//render comments
 app.get('/comments', function(req, res){
+  //if user session is undefined
   if(req.session.user===undefined){
     res.redirect('/');
   }else{
+    //find and display mcomments
     Comment.find({}, function(err, comment, count){
       res.render('comments', {
         comment:comment,
@@ -206,6 +204,7 @@ app.get('/comments', function(req, res){
 })
 
 app.post('/comments', (req, res) => {
+  //create and post new comment
   new Comment({
     username: req.session.user.username,
     comment: req.body.comment,
