@@ -1,0 +1,23 @@
+<div class = "container">
+<h1>Comments</h1>
+
+<h2>Post a Comment </h3>
+
+  <form method="POST" action="/comments">
+
+    <div>
+      Comment<input type="text" name="comment" value="">
+    </div>
+
+    <div>
+      <input type="submit" value="submit">
+    </div>
+  </form>
+
+{{#each comment}}
+
+
+<h2> Username: {{username}} <br> Comment {{comment}} </h2>
+
+{{/each}}
+</div>

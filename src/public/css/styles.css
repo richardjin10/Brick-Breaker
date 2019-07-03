@@ -1,0 +1,23 @@
+body{
+  background-color: gray;
+}
+
+#center{
+  margin: auto;
+  width: 180px;
+  padding-top: 90px;
+}
+
+
+/*https://www.w3schools.com/html/tryit.asp?filename=tryhtml_table_intro */
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}

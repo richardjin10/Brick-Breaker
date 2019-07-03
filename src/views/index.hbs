@@ -1,0 +1,58 @@
+
+
+<br><br>
+<div class="container">
+  <div class="row">
+    <div class="col">
+
+      <h1><u>Username and highscores</u></h1>
+
+      {{#each h}}
+      <h2> The highest score is {{wpm}} set by {{username}} </h2>
+      {{/each}}
+
+      <table>
+  <tr>
+    <th>Username</th>
+    <th>Score</th>
+    <th>Date</th>
+  </tr>
+  {{#each score}}
+  <tr>
+    <td>{{username}}</td>
+    <td>{{wpm}}</td>
+    <td>{{time}}</td>
+  </tr>
+
+  {{/each}}
+
+</table>
+
+
+
+
+      <br><br>
+
+    </div>
+
+
+  </div>
+
+<h2>Find User</h2>
+
+<form action="/filter" method="POST">
+  Username<input type="text" name = "username"><br>
+  <input type="submit" value="Find">
+</form>
+
+
+<br><br>
+
+<h2>Add High Score</h2>
+
+<form action="/" method="POST">
+  Username<input type="text" name = "username"><br>
+  Score<input type="text" name = "score"><br>
+  Time<input type="text" name = "time"><br>
+  <input type="submit" value="Add">
+</form>
